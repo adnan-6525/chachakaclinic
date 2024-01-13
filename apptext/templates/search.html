@@ -1,0 +1,76 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Search Data{% endblock title %}
+
+
+{% block content %}
+
+<div class="container mt-3 mb-4">
+    <h1 class="display-5 text-center font-weight-bold text-danger">Search Page</h1>
+  </div>
+
+<div class="container">
+    <form action="" method="post">
+        {% csrf_token %}
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Enter Patient Name </span>
+        </div>
+        <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </div>
+    </form>
+</div>
+
+{% if searchPatient|length > 0 %}
+<br><br>
+<ul>
+<div class = "container">
+    <table class="table table-success table-striped">
+        <thead>
+            <tr>
+              <th scope="col">Patient Name</th>
+              <th scope="col">Age</th>
+              <th scope="col">Mobile Number</th>
+              <th scope="col">Address</th>
+              <th scope="col">Medicine</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for x in searchPatient%}
+                <tr>
+                    <th scope="row">{{x.name}}</th>
+                    <td>{{x.age}} </td>
+                    <td>{{x.mobile}}</td>
+                    <td>{{x.address}}</td>
+                    <td>{{x.medicine}}</td>
+                    <td>{{x.date}}</td>
+                    <td>{{x.time}}</td>
+                </tr>
+                {% endfor%}
+          </tbody>
+    </table>
+    </div>
+</ul>
+{% endif %}
+
+{% if patName|length > 0 and searchPatient|length == 0 %}
+<div class="container">
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>NO Record Found !!!</strong> From the Name <strong>{{ patName }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+{% endif %}
+
+{% if patName|length == 0 and searchPatient|length == 0 %}
+<div class="container">
+<div class="p-3 mb-2 bg-success text-white text-center font-weight-bold">Make a Search</div>
+</div>
+{% endif %}
+
+{% endblock content %}

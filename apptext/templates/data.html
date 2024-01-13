@@ -1,0 +1,129 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}All Data{% endblock title %}
+
+{% block style %}
+.btn-print {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    color: #fff;
+    text-align: center;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.btn-print:hover {
+    background-color: #286090;
+    border-color: #204d74;
+    color: #fff;
+}
+
+.btn-print:active {
+    background-color: #204d74;
+    border-color: #122b40;
+    color: #fff;
+}
+
+.btn-print:focus {
+    outline: none;
+}
+
+.btn-print .fa-print {
+    font-size: 16px;
+    margin-top: -2px;
+}
+{% endblock style %}
+
+
+
+{% block script %}
+function printTable() {
+    var printWindow = window.open('', '_blank');
+    var tableContent = document.querySelector('.table').outerHTML;
+
+    {% comment %} // Remove the last column (Delete button) from the table before printing {% endcomment %}
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tableContent;
+
+    var lastColumnCells = tempDiv.querySelectorAll('tr td:last-child');
+    lastColumnCells.forEach(function(cell) {
+      cell.remove();
+    });
+
+    printWindow.document.write('<html><head><title>Print Table</title><style>.table-bordered{border-collapse: collapse;}</style></head><body>' + tempDiv.innerHTML + '</body></html>');
+    printWindow.print();
+    printWindow.close();
+  }
+{% endblock script %}
+
+
+{% block content %}
+<div class="container mt-3">
+    <h1 class="display-5 text-center font-weight-bold text-danger">Data Page</h1>
+    <p class="lead text-center">Page Contain all the Record of Patients.</p>
+  </div>
+
+  <div class="container">
+    <div class="text-right">
+        <button class="btn btn-primary" onclick="printTable()">
+            <i class="fa fa-print"></i> Print
+        </button>
+    </div>
+</div>
+
+
+<ul>
+    {% comment %} {% for x in member%} {% endcomment %}
+        {% comment %} <li> {{x.firstname}} {{x.lastname}} </li> {% endcomment %}
+
+        <div class = "container">
+            <table class="table table-success table-striped">
+                <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Patient Name</th>
+                      <th scope="col">Age</th>
+                      <th scope="col">Mobile Number</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Medicine</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for x in patient%}
+                        <tr>
+                            <th scope="row">{{x.id}}</th>
+                            <th scope="row">{{x.name}}</th>
+                            <td>{{x.age}} </td>
+                            <td>{{x.mobile}}</td>
+                            <td>{{x.address}}</td>
+                            <td>{{x.medicine}}</td>
+                            <td>{{x.date}}</td>
+                            <td>{{x.time}}</td>
+                            <td>
+                                <a class="btn btn-danger" href="/delete/{{x.id}}">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor%}
+                  </tbody>
+            </table>
+            </div>
+    {% comment %} {% endfor%} {% endcomment %}
+</ul>
+
+
+
+{% endblock content %}
